@@ -19,7 +19,8 @@ y_train = pd.read_csv('D:\pythonCode\deep learning\KDD\\y_train_2.csv').values
 x_test = pd.read_csv('D:\pythonCode\deep learning\KDD\\x_test_2.csv').values
 y_test = pd.read_csv('D:\pythonCode\deep learning\CNN_py\kddcup\\y_test.csv').values
 
-
+x_train = np.expand_dims(x_train, axis=2)
+x_test = np.expand_dims(x_test, axis=2)
 
 #随机数种子，保证数据和标签打乱顺序一致
 seed_1=77
@@ -34,8 +35,6 @@ np.random.shuffle(x_test)
 np.random.seed(seed_2)
 np.random.shuffle((y_test))
 
-x_train = np.expand_dims(x_train, axis=2)
-x_test = np.expand_dims(x_test, axis=2)
 
 # # print(x_train[0])
 # print('x_train.shape:', x_train.shape)
@@ -44,13 +43,13 @@ x_test = np.expand_dims(x_test, axis=2)
 #创建模型
 model = tf.keras.models.Sequential()
 #model.add(Embedding(len(x_train)*40, 32))  #Embedding编码，32维表示数据
-model.add(SimpleRNN(32, activation='relu', return_sequences=True))  # 添加RNN层
-model.add(SimpleRNN(64, activation='relu', return_sequences=True))
-model.add(SimpleRNN(32, activation='relu', return_sequences=False))
-Dropout(0.2)  # 随机丢弃0.2神经元
-model.add(Dense(128, activation='relu', kernel_regularizer=tf.keras.regularizers.L1()))  # 全连接层
-model.add(Dense(64, activation='relu', kernel_regularizer=tf.keras.regularizers.L1()))
-model.add(Dense(num_classes, activation='softmax', kernel_regularizer=tf.keras.regularizers.L1()))  # 输出层
+model.add(SimpleRNN(16, activation='relu', return_sequences=True))  # 添加RNN层
+model.add(SimpleRNN(16, activation='relu', return_sequences=True))
+model.add(SimpleRNN(16, activation='relu', return_sequences=False, kernel_regularizer=tf.keras.regularizers.L1()))
+Dropout(0.1)  # 随机丢弃0.2神经元
+model.add(Dense(128, activation='relu'))  # 全连接层
+model.add(Dense(64, activation='relu'))
+model.add(Dense(num_classes, activation='softmax'))  # 输出层
 
 
 model.compile(optimizer=tf.keras.optimizers.Adam(lr=init_lr),
